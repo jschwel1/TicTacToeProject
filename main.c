@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "ttt.h"
 #include "ttt.c"
+#include "AI.h"
 
 int main(int argc, char ** argv){
 	tttBoard * b = buildBoard();
