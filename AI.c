@@ -10,7 +10,7 @@
  *
  */
 char bestMove(tttBoard * b, char p){
-	boardTree * bt = buildTree(b, p);
+	boardTree * bt = buildTree(newNode(b,0,p), p);
 	char val[ROWS*COLUMNS] = {0};
 	char maxIdx;
 
@@ -34,24 +34,28 @@ char bestMove(tttBoard * b, char p){
 boardTree * buildTree(boardTree * r, char player){
 	int i;
 	boardTree * p = r->child;
+	
+	if (r == NULL){
+		r = newNode(&(r->b), 0, player);
+	}
 
-	if (getWinner(r->b) != EMPTY) return r;
+	if (getWinner(&(r->b)) != EMPTY) return r;
 
 	// first populate this node with all possible children
 	for (i = 1; i <= (ROWS*COLUMNS); i++){
 
-		if (available(i)){
+		if (available(i, &(r->b))){
 			// if the spot is available,
 			// create a new boardTree with the same board plus the extra piece
-			if(r->child = NULL) {
-				r->child = newNode(r->b, i, switchPlayer(player), 0);
+			if(r->child == NULL) {
+				r->child = newNode(&(r->b), i, switchPlayers(player));
 				p = r->child;
 			}
 			else{
-				p->next = newNode(r->b, i, switchPlayer(player), 0);
+				p->next = newNode(&(r->b), i, switchPlayers(player));
 				p = p->next;
 			}
-			p->b = addPiece(p->b, i, player);
+			(p->b) = *(addPiece(&(p->b), i, player));
 			
 		}
 	}
@@ -61,7 +65,7 @@ boardTree * buildTree(boardTree * r, char player){
 	// Now delve into each child and populate their trees
 	p = r->child; // set p to point to the first element in the list
 	while (p != NULL){
-		if (numSpacesLeft(p->b) == 0) {
+		if (numSpacesLeft(&(p->b)) == 0) {
 			p = p->next;
 			continue;
 		}
@@ -71,21 +75,20 @@ boardTree * buildTree(boardTree * r, char player){
 	return r;
 
 }
-/*
 
-boardTree * newNode(tttBoard * b, char spot, char player, char depth, char winCount){
-	bt = (boardTree *)malloc(sizeof(boardTree));
+boardTree * newNode(tttBoard * b, char spot, char player){
+	boardTree * bt = (boardTree *)malloc(sizeof(boardTree));
 	if (bt == NULL) exit(1);
 	
 	// initialize everything in bt
-	&(bt->b) = &(b);
+	(bt->b) = *(b);
 	bt->next = NULL;
 	bt->child = NULL;
 	bt->spot = spot;
 	bt->player = player;
-	bt->depth = depth;
-	char wincCount = 0;
-
+	bt->winCount = 0;
+	
+	return bt;
 }
 
 char analyzeTree(boardTree * b, char player){
@@ -109,6 +112,7 @@ char analyzeTree(boardTree * b, char player){
 	return count;
 }
 
+/*
 char freeTree(boardTree * b){
 
 	// go to the bottom (no children)

@@ -19,9 +19,9 @@ struct boardTree_n {
 
 typedef struct boardTree_n boardTree;
 
-boardTree * buildTree(tttBoard * b, char p);
+boardTree * buildTree(boardTree * b, char p);
 
-boardTree * newNode(tttBoard * b, char spot, char player, char winCount);
+boardTree * newNode(tttBoard * b, char spot, char player);
 
 char analyzeTree(boardTree * b, char player);
 
