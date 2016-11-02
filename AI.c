@@ -1,6 +1,7 @@
 #include "ttt.h"
 #include "AI.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 /* bestMove(tttBoard * b, char p, char o);
  * parameters:	tttBoard * b - a pointer to the board being played on
@@ -27,7 +28,12 @@ char bestMove(tttBoard * b, char p){
 	for (i = 1; i < ROWS*COLUMNS; i++){
 		if (val[i] > val[(int)maxIdx]) maxIdx = i;
 	}
-	return maxIdx;
+	
+	for (i = 0; i< ROWS*COLUMNS; i++) printf("%d has a score of %d\n",i+1,(int)val[i]);
+	
+	freeTree(bt);
+
+	return maxIdx + 1;
 	
 }
 
@@ -93,26 +99,26 @@ boardTree * newNode(tttBoard * b, char spot, char player){
 
 char analyzeTree(boardTree * b, char player){
 	char count = 0;
-	p = b;
+	boardTree * p = b;
 
 	if (b == NULL) return 0;
 	while (p != NULL){
-		char w = getWinner(b->b);
+		char w = getWinner(&(b->b));
 		if (w == EMPTY){
-			count+=analyzeTree(p, player);
+			count+=analyzeTree(p->child, player);
 		}
 		else if (w == player){
-			count+=(10-numSpacesLeft(p->b))*1;
+			count+=(numSpacesLeft(&(p->b)))*1;
 		}
 		else {
-			count+=(10-numSpacesLeft(p->b))*-1;
+			count+=(numSpacesLeft(&(p->b)))*-1;
 		}
 		p = p->next;
 	}
 	return count;
 }
 
-/*
+
 char freeTree(boardTree * b){
 
 	// go to the bottom (no children)
@@ -129,6 +135,5 @@ char freeTree(boardTree * b){
 	// we can free be and return
 	
 	free(b);
-	return;
-
-}*/
+	return 1;
+}

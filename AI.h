@@ -1,8 +1,9 @@
+#include "ttt.h"
+
 #ifndef AI_H
 #define AI_H
 
-#include "ttt.h"
-
+/* Define the structure for the node of the tree of TTT Boards*/
 struct boardTree_n {
 	// each node will have a board
 	tttBoard b;
@@ -19,6 +20,7 @@ struct boardTree_n {
 
 typedef struct boardTree_n boardTree;
 
+/* Methods used to fidn the best move*/
 boardTree * buildTree(boardTree * b, char p);
 
 boardTree * newNode(tttBoard * b, char spot, char player);
@@ -27,7 +29,7 @@ char analyzeTree(boardTree * b, char player);
 
 char freeTree(boardTree * b);
 
-char getBestMove(tttBoard * b);
+char bestMove(tttBoard * b, char player);
 
 
 #endif

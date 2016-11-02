@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include "ttt.h"
-#include "ttt.c"
+//#include "ttt.c"
 #include "AI.h"
+//#include "AI.c"
+
 
 int main(int argc, char ** argv){
 	tttBoard * b = buildBoard();
@@ -14,6 +16,12 @@ int main(int argc, char ** argv){
 		// give some spacing between printing boards
 		printf("\n\n\n\n\n\n\n");
 		printBoard(b);
+		if (player == X){
+			pos = bestMove(b, player);
+			printf("Computer is taking spot #%d\n",(int)pos);
+			addPiece(b, pos, player);
+			continue;
+		}
 		printf("Where would you like to go, %c?\n", (player == X)?'X':'O');
 		pos = readInput();
 		while (!available(pos, b)){
@@ -29,6 +37,6 @@ int main(int argc, char ** argv){
 		printf("Contratulations, %c, you won!\n", player==X?'X':'O');
 	else printf("TIE\n");
 
-	free(b);
+	freeBoard(b);
 	return 0;
 }
